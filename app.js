@@ -26,7 +26,7 @@ const calcArray = []
 
 for (let i = 0; i < btn.length; i++) {
     btn[i].addEventListener('click', () => {
-        if (btn[i].innerHTML !== 'C' && btn[i].innerHTML !== '=') {
+        if (btn[i].innerHTML !== 'AC' && btn[i].innerHTML !== '=') {
             if (inputField.value === '0') {
                 inputField.value = '';
             };
@@ -43,7 +43,7 @@ for (let i = 0; i < btn.length; i++) {
             };
         };
         //check if user input is not C or = 
-        if (btn[i].innerHTML !== 'C' && btn[i].innerHTML !== '=') {
+        if (btn[i].innerHTML !== 'AC' && btn[i].innerHTML !== '=') {
             //initialize the array for calculation 
             const num = Number(calcArray[calcArray.length - 1])
             if (calcArray.length === 0 && operators.includes(btn[i].innerHTML) === false && btn[i].innerHTML !== '0') {
@@ -65,29 +65,49 @@ for (let i = 0; i < btn.length; i++) {
 
         //add * to calcArrayif userinput is x
 
-        //get the result of the userinput
-        function evil(fn) {
-            return new Function('return ' + fn)();
-        };
-        if (btn[i].innerHTML === '=' && calcArray.length !== 0) {
+
+        if (btn[i].innerHTML === '=' && calcArray.length !== 0 && operators.includes(calcArray[calcArray.length - 1]) === false) {
             //replace x with *
             calcArray.map((currElement, index) => {
                 if (currElement === 'x') {
                     calcArray[index] = '*';
                 }
             });
-            //add = to calcArray for further calculation
-            calcArray.push('=');
-            //get rid of = at the end
-            let stringEquationArray = calcArray.slice(0, calcArray.length - 2);
-            console.log(stringEquationArray);
+            //get the result of the userinput
+            function evil(fn) {
+                return new Function('return ' + fn)();
+            };
             //convert array to string and give out result
-            let stringEquation = stringEquationArray.join(' ');
+            let stringEquation = calcArray.join(' ');
             //calculate equation
             let resultOutput = evil(stringEquation);
-            console.log( evil(stringEquation) );
             inputField.value = resultOutput;
         };
-        console.log(calcArray);
+
+        // Create new Calculatino by deleting Array and emptying the input field
+        if (btn[i].innerHTML === 'C' && calcArray.length !== 0) {
+            calcArray.length = 0;
+            inputField.value = '0';
+            btn[i].innerText = 'AC';
+        };
+
+        // Change the C button into AC if there is a element in the Array
+        if (typeof calcArray !== 'undefined' && calcArray.length > 0) {
+            const clearButton = document.querySelector("#ClearButton");
+            clearButton.innerText= 'C';
+        };
     });
 };
+
+// // only allow numbers and operators in the input field
+
+
+// function lettersOnly(input) {
+//     const regex = /[^0-9]/gi;
+//     inputField.value = inputField.value.replace(regex, "")
+// };
+
+
+// if (inputField.value.length >= 0) {
+//     console.log(inputField.value);
+// };
